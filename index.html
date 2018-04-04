@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1">
+
+		<title>Final-Project-Bess</title>
+
+		<script src="libraries/p5.js"></script>
+		<script src="libraries/p5.dom.js"></script>
+		<script src="libraries/p5.sound.js"></script>
+		<script src="sketch.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<style>
+			body {
+				margin: 5px;
+				padding: 5px;
+				overflow: hidden;
+			}
+			#canvas_containers {
+				margin-left: 10px;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Artist Profile - <i>Elyangel</i></h1>
+		<div id="canvas_containers">
+			<div id="song_viz_1">
+				<div id="meta_1" style="float:left">  </div>
+				<div id="controls_1"></div>
+			</div><br>
+			<div id="song_viz_2">
+				<div id="meta_2" style="float:left">  </div>
+				<div id="controls_2"></div>
+			</div><br>
+		</div>
+	</body>
+	<script>
+		let script = document.createElement("script");
+		script.src = 'https://itunes.apple.com/search?callback=itunesResults&format=json&entity=song&term=' + 'Elyangel';
+		document.body.appendChild(script);
+	</script>
+</html>
