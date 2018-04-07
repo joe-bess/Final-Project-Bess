@@ -9,7 +9,7 @@
 		<script src="libraries/p5.js"></script>
 		<script src="libraries/p5.dom.js"></script>
 		<script src="libraries/p5.sound.js"></script>
-		<script src="sketch.js"></script>
+		<script src="sketch.js?v=2"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 		<style>
@@ -25,21 +25,88 @@
 		</style>
 	</head>
 	<body>
-		<h1>Artist Profile - <i>Elyangel</i></h1>
+		<div>Select Artist & Track</div>
+		<form>
+			<select id="select_a" onchange="artistSelect()">
+				<option selected disabled> -- </option>
+				<option value="Elyangel">Elyangel</option>
+				<option value="Someone Else">Someone Else</option>
+			</select>
+			<select id="select_t" onchange="display()">
+				<option selected disabled> -- </option>
+			</select>
+		</form>
+		<h2 id="artistProfile">Artist Profile - <i id="artist"></i></h2>
 		<div id="canvas_containers">
-			<div id="song_viz_1">
+			<div id="song_viz">
 				<div id="meta_1" style="float:left">  </div>
 				<div id="controls_1"></div>
 			</div><br>
-			<div id="song_viz_2">
-				<div id="meta_2" style="float:left">  </div>
-				<div id="controls_2"></div>
-			</div><br>
-		</div>
 	</body>
 	<script>
-		let script = document.createElement("script");
-		script.src = 'https://itunes.apple.com/search?callback=itunesResults&format=json&entity=song&term=' + 'Elyangel';
-		document.body.appendChild(script);
+		let artistsAndTracks = {};
+		artistsAndTracks['Elyangel'] = ['My Darling', 'Love For You'];
+		artistsAndTracks['Someone Else'] = ['Clementine'];
+		let artistProfile = document.getElementById("artistProfile");
+		artistProfile.style.display = "none";
+
+		function artistSelect() {
+			let artistList = document.getElementById("select_a");
+			let trackList = document.getElementById("select_t");
+			let x = artistList.selectedIndex;
+			let selArtist = artistList.options[x].value;
+			// while (trackList.options.length) {
+			// 	trackList.remove(0);
+			// }
+			let artists = artistsAndTracks[selArtist];
+			if (artists) {
+				for (let i = 0; i < artists.length; i++) {
+					let artist = new Option(artists[i], i);
+					trackList.options.add(artist);
+				}
+			}
+			artistProfile.style.display = "block";
+			document.getElementById("artist").innerHTML = artistList.options[x].text;
+		};
+
+		function display() {
+			new p5(viz, 'song_viz');
+		};
+
+		let trackList = document.getElementById("select_t");
+		let x = trackList.selectedIndex;
+		let selTrack = trackList.options[x].value;
+
+		function itunesResults(json) {
+		  let txt_1 = "";
+		  let txt_2 = "";
+		  txt_1 += json.results[0].artistName + " - " + json.results[0].trackName;
+		  txt_2 += json.results[3].artistName + " - " + json.results[3].trackName;
+		  if (selTrack === "0") {
+		  	document.getElementById("meta_1").innerHTML = txt_1;
+			} else if (selTrack === "1") {
+			  document.getElementById("meta_1").innerHTML = txt_2;
+			}
+		}
+
+		function jsonCallback(json){
+  		console.log(json)
+		}
+		$.ajax({
+		  url: "https://patrickmcneill.com/itp/bess-media/audio.json",
+		  dataType: "jsonp"
+			});
+
+		let script = $("<script />", {
+			src: "https://itunes.apple.com/search?callback=itunesResults&format=json&entity=song&term=" + document.getElementById("artist").value,
+			}
+		);
+		$("body").append(script);
+
+		let script_2 = $("<script />", {
+	    src: "https://patrickmcneill.com/itp/bess-media/audio.json",
+  		}
+		);
+		$("body").append(script_2);
 	</script>
 </html>
