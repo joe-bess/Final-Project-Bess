@@ -32,7 +32,7 @@
 				<option value="Elyangel">Elyangel</option>
 				<option value="Someone Else">Someone Else</option>
 			</select>
-			<select id="select_t" onchange="display()">
+			<select id="select_t" onchange="$('body').append(script_1); s = trackList.selectedIndex; selTrack = trackList.options[s].text; display()">
 				<option selected disabled> -- </option>
 			</select>
 		</form>
@@ -42,22 +42,29 @@
 				<div id="meta_1" style="float:left">  </div>
 				<div id="controls_1"></div>
 			</div><br>
+		<p id="loading">Please Wait While Audio Loads...</p>
+		<div id="refresh"><small><i>REFRESH THE PAGE TO PICK A NEW SONG</i></small></div>
 	</body>
 	<script>
+		let loadingP = document.getElementById("loading");
+		let refreshDiv = document.getElementById("refresh");
+		refreshDiv.style.display = "none";
+		loadingP.style.display = "none";
 		let artistsAndTracks = {};
 		artistsAndTracks['Elyangel'] = ['My Darling', 'Love For You'];
 		artistsAndTracks['Someone Else'] = ['Clementine'];
 		let artistProfile = document.getElementById("artistProfile");
 		artistProfile.style.display = "none";
+		let trackList = document.getElementById("select_t");
+		let s;
+		let selTrack;
+		let script_1;
 
 		function artistSelect() {
+			// Displays the list of tracks for each artist, adds the artist name to the artist profile header, and adds the iTunes Search API script
 			let artistList = document.getElementById("select_a");
-			let trackList = document.getElementById("select_t");
 			let x = artistList.selectedIndex;
 			let selArtist = artistList.options[x].value;
-			// while (trackList.options.length) {
-			// 	trackList.remove(0);
-			// }
 			let artists = artistsAndTracks[selArtist];
 			if (artists) {
 				for (let i = 0; i < artists.length; i++) {
@@ -67,46 +74,45 @@
 			}
 			artistProfile.style.display = "block";
 			document.getElementById("artist").innerHTML = artistList.options[x].text;
+			script_1 = $("<script />", {
+				src: "https://itunes.apple.com/search?callback=itunesResults&format=json&entity=song&term=" + artistList.options[x].text
+				}
+			);
 		};
 
 		function display() {
-			new p5(viz, 'song_viz');
+			// Getting metadata for "Someone Else - Clementine"
+			$.get("https://patrickmcneill.com/itp/bess-media/audio.json", function (data) {
+				if (selTrack === "Clementine") {
+					let txt = "";
+					txt += data[2].artist + " - " + data[2].title;
+					document.getElementById("meta_1").innerHTML = txt;
+				}
+			}, "json");
+
+			refreshDiv.style.display = "block";
+
+			// Displaying the visualizers for each song
+			if (selTrack === "Love For You") {
+				new p5(viz_1, 'song_viz');
+			} else if (selTrack === "My Darling") {
+				new p5(viz_2, 'song_viz');
+			} else if (selTrack === "Clementine") {
+				new p5(viz_3, 'song_viz');
+			}
 		};
 
-		let trackList = document.getElementById("select_t");
-		let x = trackList.selectedIndex;
-		let selTrack = trackList.options[x].value;
-
 		function itunesResults(json) {
+			//Getting the metadata for "My Darling" and "Love For You" from the iTunes Search API
 		  let txt_1 = "";
 		  let txt_2 = "";
 		  txt_1 += json.results[0].artistName + " - " + json.results[0].trackName;
-		  txt_2 += json.results[3].artistName + " - " + json.results[3].trackName;
-		  if (selTrack === "0") {
+		  txt_2 += json.results[4].artistName + " - " + json.results[4].trackName;
+		  if (selTrack === "My Darling") {
 		  	document.getElementById("meta_1").innerHTML = txt_1;
-			} else if (selTrack === "1") {
+			} else if (selTrack === "Love For You") {
 			  document.getElementById("meta_1").innerHTML = txt_2;
 			}
 		}
-
-		function jsonCallback(json){
-  		console.log(json)
-		}
-		$.ajax({
-		  url: "https://patrickmcneill.com/itp/bess-media/audio.json",
-		  dataType: "jsonp"
-			});
-
-		let script = $("<script />", {
-			src: "https://itunes.apple.com/search?callback=itunesResults&format=json&entity=song&term=" + document.getElementById("artist").value,
-			}
-		);
-		$("body").append(script);
-
-		let script_2 = $("<script />", {
-	    src: "https://patrickmcneill.com/itp/bess-media/audio.json",
-  		}
-		);
-		$("body").append(script_2);
 	</script>
 </html>
