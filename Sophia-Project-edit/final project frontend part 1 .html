@@ -1,0 +1,64 @@
+<html>
+<head>
+    <h1> Find a Chord Progression</h1>
+
+</head>
+<body>
+        <body bgcolor="#E6E6FA">
+        Enter notes in your melody
+        <input id= "notes" type="text" />
+        <input id="search" type="submit" value="Search"/>
+    </form> 
+
+    <div id="output">
+    </div>
+
+<script>
+    <script language="javascript">
+$("#search").click(function(e) {
+    var key   = parseInt($("#key").val(), 10);
+    var minor = parseInt($("#minor").val(), 10);
+    var major = parseInt($("#major").val(), 10);
+
+
+    $.get("file:///C:/Users/Sophia/Documents/Programming%20Class/final%20project%20sql%201%20.sql" + key + major + minor, function(progression) {
+        let html = '';
+
+
+        for (let t of transpose) {
+            html += ' = <a href="' + t.premium_url + '" target="_blank">Premium</a>';
+        }
+        html += '</p>';
+    }
+
+    $("output".html(html);
+
+
+
+
+
+console.log("Searching for chords for " + key + major + minor)
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

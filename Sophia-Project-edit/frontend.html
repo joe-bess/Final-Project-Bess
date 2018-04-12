@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <!-- I edited the scripts so they're accessible to anyone as opposed to having them linked
+       to your file directory  -->
+      <script scr="index.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <style>
+        h1 {
+          position: relative;
+          -webkit-animation: fade-in 2s;
+          -webkit-animation-fill-mode: forwards;
+          -webkit-animation-timing-function: ease-out;
+        }
+
+        @-webkit-keyframes fade-in {
+          from {top: -20px; color: transparent;}
+          to {top: 0px;}
+        }
+
+        body {
+          text-align: center;
+          font: 20px "Helvetica Neue", Arial, sans-serif;
+	        -webkit-font-smoothing: antialiased;
+          background-image: url("bg.png");
+        }
+
+        input {
+          -webkit-transition: padding-right .25s linear;
+          width: 50px
+        }
+        input:hover {
+          -webkit-animation: input-hover .5s infinite;
+          -webkit-animation-timing-function: linear;
+          position: relative;
+          padding-right: 20px;
+        }
+
+        @-webkit-keyframes input-hover {
+          from {background-color: #F7FF00;}
+          to {background-color: #FBE7FF;}
+        }
+
+        button {
+          -webkit-transition: padding .25s;
+        }
+
+        button:hover {
+          -webkit-animation: pop .1s;
+          -webkit-animation-fill-mode: forwards;
+          position: relative;
+          padding: 3px;
+
+        }
+
+        @-webkit-keyframes pop {
+          from {-webkit-transform: scale(1);}
+          to {-webkit-transform: scale(1.2);}
+        }
+      </style>
+  </head>
+  <body>
+    <!-- Made all text to be within the body element and separated the script element from the body -->
+      <h1> Find a Chord Progression</h1>
+      <form id="myForm">
+      Enter the key of your melody: <input name="inputbox" type="text">
+      </form>
+      <button onclick="getInput()">Submit</button>
+
+      <div id="demo"></div>
+  </body>
+  <script>
+      function getInput() {
+        var x= document.getElementById("myForm");
+        var y= x.elements["inputbox"].value;
+
+     	  $(document).ready(function () {
+          $.getJSON('http://localhost:3000/chords', function (data) {
+
+            if ( y === "c") {
+                document.write("In the key of C, your suggested chords are : " +
+                "   Major:   " +    (data[0].major) + "    or    " +
+                "   Minor   " +    (data[0].minor));
+            }
+            if ( y === "d") {
+                document.write("In the key of D, your suggested chords are : " +
+                "   Major:   " +    (data[1].major) + "    or    " +
+                "   Minor   " +    (data[1].minor));
+            }
+            if ( y === "e") {
+                document.write("In the key of E, your suggested chords are : " +
+                "   Major:   " +    (data[2].major) + "    or    " +
+                "   Minor   " +    (data[2].minor));
+            }
+            if ( y === "f") {
+                document.write("In the key of F, your suggested chords are : " +
+                "   Major:   " +    (data[3].major) + "    or    " +
+                "   Minor   " +    (data[3].minor));
+            }
+            if ( y === "g") {
+                document.write("In the key of G, your suggested chords are : " +
+                "   Major:   " +    (data[4].major) + "    or    " +
+                "   Minor   " +    (data[4].minor));
+            }
+            if ( y === "a") {
+                document.write("In the key of A, your suggested chords are : " +
+                "   Major:   " +    (data[5].major) + "    or    " +
+                "   Minor   " +    (data[5].minor));
+            }
+            if ( y === "b") {
+                // Fixed the document read out to say "In the key or B" instead of "C"
+                document.write("In the key of B, your suggested chords are : " +
+                "   Major:   " +    (data[6].major) + "    or    " +
+                "   Minor   " +    (data[6].minor));
+            };
+          });
+        });
+      };
+  </script>
+</html>
